@@ -2,10 +2,17 @@ Module-Identifiers DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
 IMPORTS
   Host, Port FROM Module-URI
-Server_name ::= SEQUENCE { hostname Host_name,
+Server-name ::= SEQUENCE { hostname Host,
                            port Port OPTIONAL }
-Host_name ::= Host
+Identifier ::= SEQUENCE { sigil Identifier-type, 
+                          localpart Local-part, 
+                          colon Colon DEFAULT ":",
+                          domain Server-name } 
 
+Local-part ::= IA5String( FROM ("a".."z" | "0".."9" | "._-="))
 
+Identifier-type ::= ENUMERATED { user-id, room, event, room-alias }
+
+Colon ::= IA5String (":")
 
 END
