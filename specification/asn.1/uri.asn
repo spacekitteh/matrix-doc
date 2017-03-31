@@ -1,0 +1,111 @@
+Module-URI DEFINITIONS AUTOMATIC TAGS ::= -- TODO: FINISH.
+BEGIN
+
+--https://tools.ietf.org/html/rfc3986#appendix-A
+
+URI ::= SEQUENCE {
+  scheme Scheme,
+  colon Colon,
+  hier-part Hier-part,
+  query-part Query-part OPTIONAL,
+  fragment-part Fragment-part OPTIONAL
+}
+
+URI' ::= UTF8String (PATTERN "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?" )
+
+Query-part ::= SEQUENCE {qmark Question-mark, query Query }
+Fragment-part ::= SEQUENCE {hash Hash, fragment Fragment}
+
+
+Hier-part = CHOICE { 
+  abempty SEQUENCE {asep UTF8String ("//"), authority Authority, path-abempty Path-abempty},
+  absolute Path-absolute,
+  rootless Path-rootless,
+  empty Path-empty
+}
+
+URI-reference ::= CHOICE {uri URI, relative Relative-ref}
+
+Absolute-URI ::= SEQUENCE {
+  scheme Scheme,
+  colon Colon,
+  hier-part Hier-part,
+  query-part Query-part OPTIONAL
+}
+
+Relative-ref ::= SEQUENCE { 
+  relative-part Relative-part,
+  query-part Query-part OPTIONAL,
+  fragment-part Fragment-part OPTIONAL
+}
+
+Relative-part ::= CHOICE { 
+  abempty SEQUENCE {asep UTF8String ("//"), authority Authority, path-abempty Path-abempty},
+  absolute Path-absolute,
+  noscheme Path-noscheme,
+  empty Path-empty
+}
+
+Scheme ::= UTF8String (PATERN "^\p{Letter}([\p{Letter}\p{Mark}\p{Number}+-\.]*)"
+            FROM (ALPHA | DIGIT | "+" | "-" | "."))
+            
+
+Authority ::= SEQUENCE {
+  SEQUENCE { userinfo Userinfo, at At} OPTIONAL,
+  host Host,
+  SEQUENCE { colon Colon, port Port} OPTIONAL
+}
+Userinfo ::= UTF8String (FROM (Unreserved | Pct-encoded | Sub-delim | Colon))
+Host ::= CHOICE { ip-Literal IP-literal, ipv4 IPv4-address, reg-name Reg-name}
+Port ::= INTEGER (0..65535)
+
+IP-Literal = SEQUENCE { lb UTF8String ("["),
+                        CHOICE{ipv6 IPv6-address, ipvf IPv-future}
+                        rb UTF8String ("]") }
+IPv-future ::= UTF8String -- TODO SEQUENCE {"v", hex Hex-char, dot UTF8String ("."
+IPv6-address ::=UTF8String -- TODO
+H16 ::= Hex-char (WITH COMPOENT (SIZE(4))
+LS32 ::= UTF8String -- TODO
+IPv4-address ::= SEQUENCE { o1 Dec-octet, d1 UTF8String ("."), o2 Dec-octet, d2 UTF8String ("."), 
+                            o3 Dec-octet, d3 UTF8String ("."), o4 Dec-octet }
+
+Dec-octet ::= INTEGER (0..255)
+
+Reg-name ::= UTF8String ( FROM (Unreserved UNION Pct-encoded UNION Sub-delim))
+
+Path ::= CHOICE { abempty Path-abempty, absolute Path-absolute, 
+                  noscheme Path-noscheme, rootless Path-rootless, 
+                  empty Path-empty }
+                            
+Path-abempty ::= SEQUENCE OF { SEQUENCE {slash UTF8String "/", segment Segment} }
+Path-absolute ::= SEQUENCE { slash UTF8String "/", segment Segment (Size(1..MAX)),
+                             segments SEQUENCE OF Path-abempty}
+Path-noscheme ::= SEQUENCE { schemeless Path-abempty WITH COMPONENTS 
+                             {..., segment (SIZE(1..MAX) (Segment EXCEPT ":"))}, 
+                  remainder SEQUENCE OF Path-abempty} -- TODO: Fix if broken
+Path-rootless ::= SEQUENCE { segment Segment  (WITH COMPONENT (SIZE (1..MAX)) FROM (Segment EXCEPT "/")),
+                             remainder SEQUENCE OF Path-abempty}
+Path-empty ::= NULL
+Segment ::= UTF8String ( FROM Pchar )
+
+Pchar ::= UTF8String ( Unreserved | Pct-encoded | Sub-delim | ":" | "@")
+
+Query ::= UTF8String ( FROM ( Pchar | "/" | "?"))
+Fragment ::= Query
+
+Pct-encoded ::= SEQUENCE{percent UTF8String "%", h1 Hex-char, h2 Hex-char}
+
+Alpha ::= UTF8String (PATTERN "^\p{Letter}(\p{Mark}*)$") -- TODO: Find proper internationalised domain name scheme regex? https://www.ietf.org/rfc/rfc3987.txt
+Digit ::= UTF8String (PATTERN "^\p{Number}$" )
+Unreserved ::= UTF8String (Alpha | Digit | "-" | "." | "_" | "~")
+Reserved ::= UTF8String ( Gen-delim UNION Sub-delim )
+Gen-delim ::= UTF8String (":" | "/" | "?" | "#" | "[" | "]" | "@")
+Sub-delim ::= UTF8String ("!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=")
+Hex-char ::= UTF8String (FROM ("0..9" | "A-F" | "a-f") SIZE (1))
+Colon ::= UTF8String (":")
+Question-mark ::= UTF8String ("?")
+At ::= UTF8String ("@")
+
+
+
+END

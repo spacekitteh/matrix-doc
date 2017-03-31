@@ -1,0 +1,15 @@
+Module-encryption-types DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+Crypto-algorithm ::= UTF8String -- TODO: Find a standard for crypto algorithm naming
+
+Key-ID ::= SEQUENCE {
+  algorithm Crypto-algorithm,
+  identifier UTF8String 
+  } -- TODO: JSON encoding rule is "algorithm:identifier"
+
+Public-key ::= UTF8String -- TODO: Constrain by regex to base64 encoding
+Valid-public-key ::= BOOLEAN
+
+END
+

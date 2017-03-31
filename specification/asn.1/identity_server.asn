@@ -1,0 +1,17 @@
+Protocol-Identity-server-key-lookup DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+IMPORTS Key-ID, Public-key, Valid-public-key FROM Module-encryption-types
+get-pubkey OPERATION ::= {
+ ARGUMENT Key-ID
+ RESULT Public-key
+ ERRORS {unknown-algorithm | unknown-key-id}
+ }
+
+is-public-key-valid OPERATION ::= {
+  ARGUMENT Public-key
+  RESULT Valid-public-key
+  ERRORS {malformatted-public-key}
+  }
+is-ephemeral-public-key-valid OPERATION ::= is-public-key-valid
+
+END

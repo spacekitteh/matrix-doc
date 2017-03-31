@@ -1,0 +1,11 @@
+Module-Identifiers DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+IMPORTS
+  Host, Port FROM Module-URI
+Server_name ::= SEQUENCE { hostname Host_name,
+                           port Port OPTIONAL }
+Host_name ::= Host
+
+
+
+END
