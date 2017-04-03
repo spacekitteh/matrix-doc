@@ -1,4 +1,4 @@
-ModuleEvents DEFINITIONS AUTOMATIC TAGS ::=
+CoreEvents DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
 
 PlainEvent{Content} ::= SET { 
@@ -7,18 +7,27 @@ content Content,
 ...
 }
 
-RoomEvent{Content, UnsignedType OPTIONAL} ::= PlainEvent{Content} WITH COMPONENTS (...,
+RoomEvent{eventType' RoomEventType, Content, UnsignedType OPTIONAL} ::= PlainEvent{Content} WITH COMPONENTS 
+(...,
 event_id EventIdentifier,
 room_id RoomIdentifier,
 sender UserIdentifier,
-unsigned UnsignedType OPTIONAL
+unsigned UnsignedType OPTIONAL,
+eventType ::= eventType'
 )
 
-StateEvent{Content, PrevContent OPTIONAL, StateKey OPTIONAL, UnsignedType} ::= RoomEvent{Content, 
-UnsignedType} WITH COMPONENTS (...,
-prev_content PrevContent OPTIONAL,
-state_key StateKey)
+StateEvent{Content, PrevContent OPTIONAL, StateKey OPTIONAL, UnsignedType OPTIONAL} ::= RoomEvent{Content, 
+UnsignedType} WITH COMPONENTS (..., prev_content PrevContent OPTIONAL, state_key StateKey)
 
+RoomEventType ::= ENUMERATED {..., create, aliases, canonical_alias, join_rules, member, power_levels, 
+redaction}
 
+EventType ::= CHOICE {
+roomEvent RoomEventType
+...
+}
+
+M_ROOM_ALIASES ::= StateEvent{SET { aliases SEQUENCE OF RoomAliasIdentifier}, StateKey ::= ServerName} WITH 
+COMPONENTS ( ..., eventType roomEvent < EventType ::= aliases
 
 END
