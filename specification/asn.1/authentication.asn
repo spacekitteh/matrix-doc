@@ -1,6 +1,6 @@
 Authentication-types DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
-IMPORTS Session FROM User-types
+IMPORTS Session FROM User-types;
 Login-type ::= ENUMERATED { --TODO: Find out how to format these properly for JSON
   password,
   recaptcha,
@@ -20,9 +20,9 @@ END
 Protocol-user-authentication DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
 IMPORTS 
- Session FROM User-Types
- Login-type FROM Authentication-types
+ Session FROM User-Types 
+ Login-type FROM Authentication-types;
 
-Flows ::= SET OF {SEQUENCE OF Stage (SIZE 1..MAX)} SIZE(1..MAX)
+Flows ::= SET OF (SEQUENCE OF Stage (SIZE 1..MAX)) SIZE(1..MAX)
 Stage ::= Login-type
 END

@@ -1,5 +1,5 @@
 Module-api-version DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
-Version ::= UTF8String -- constrain by regex? Or split up into major.minor.fix format?
-Supported-versions :: = SET OF Version
+Api-version ::= UTF8String -- constrain by regex? Or split up into major.minor.fix format?
+Supported-versions ::= SET OF Api-version
 END

@@ -3,7 +3,7 @@ BEGIN
 
 Error ::= SEQUENCE {
   errcode ErrorCode,
-  error PrintableString }
+  error UTF8String }
 
 -- TODO: Convert to a "standard errors" "authentication errors" etc CHOICE
 ErrorCode ::= ENUMERATED { M_FORBIDDEN,

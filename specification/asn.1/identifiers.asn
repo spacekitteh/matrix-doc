@@ -2,17 +2,24 @@ Module-Identifiers DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
 IMPORTS
   Host, Port FROM Module-URI
-Server-name ::= SEQUENCE { hostname Host,
+ServerName ::= SET { hostname Host,
                            port Port OPTIONAL }
-Identifier ::= SEQUENCE { sigil Identifier-type, 
-                          localpart Local-part, 
-                          colon Colon DEFAULT ":",
-                          domain Server-name } 
+Identifier ::= SET { sigil IdentifierType, 
+                          localpart LocalPart, 
+                          domain ServerName } 
 
-Local-part ::= IA5String( FROM ("a".."z" | "0".."9" | "._-="))
+LocalPart ::= IA5String( FROM ("a".."z" | "0".."9" | "._-="))
+ 
+IdentifierType ::= ENUMERATED { user-id, room, event, room-alias }
 
-Identifier-type ::= ENUMERATED { user-id, room, event, room-alias }
+UserIdentifier ::= Identifier WITH COMPONENTS ( ..., sigil (user-id))
 
-Colon ::= IA5String (":")
+RoomIdentifier ::= Identifier WITH COMPONENTS ( ..., sigil (room))
+
+EventIdentifier ::= Identifier WITH COMPONENTS ( ..., sigil (event))
+
+RoomAliasIdentifier ::= Identifier WITH COMPONENTS ( ..., sigil (room-alias))
+
+-- TODO: Add "this set must be less than <xyz> bytes when viewed as a string"
 
 END

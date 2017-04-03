@@ -3,7 +3,7 @@ BEGIN
 
 Crypto-algorithm ::= UTF8String -- TODO: Find a standard for crypto algorithm naming
 
-Key-ID ::= SEQUENCE {
+Key-ID ::= SET {
   algorithm Crypto-algorithm,
   identifier UTF8String 
   } -- TODO: JSON encoding rule is "algorithm:identifier"

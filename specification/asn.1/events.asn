@@ -1,0 +1,24 @@
+ModuleEvents DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+PlainEvent{Content} ::= SET { 
+eventType EventType, -- TODO: Create an EventType object ID thing.
+content Content,
+...
+}
+
+RoomEvent{Content, UnsignedType OPTIONAL} ::= PlainEvent{Content} WITH COMPONENTS (...,
+event_id EventIdentifier,
+room_id RoomIdentifier,
+sender UserIdentifier,
+unsigned UnsignedType OPTIONAL
+)
+
+StateEvent{Content, PrevContent OPTIONAL, StateKey OPTIONAL, UnsignedType} ::= RoomEvent{Content, 
+UnsignedType} WITH COMPONENTS (...,
+prev_content PrevContent OPTIONAL,
+state_key StateKey)
+
+
+
+END
